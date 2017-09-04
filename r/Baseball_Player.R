@@ -1,0 +1,16 @@
+player<-read.csv("Baseball_Player.csv",sep=",",header=T)
+player=na.omit(player)
+x=model.matrix(Salary~.,player)[,-1]
+y=player$Salary
+library(glmnet)
+seq=10^seq(10,-2,length=100)
+ridge=glmnet(x,y,alpha=0,lambda=seq)
+predict(ridge,s=50,type="coefficients")[1:20,]
+train=sample(1:nrow(x),nrow(x)/2)
+test=(-train)
+y.test=y[test]
+bestlamda=cv.out$lambda.min
+cv.out=cv.glmnet(x[train,],y[train],alpha=0)
+plot(cv.out)
+pred=predict(ridge,s=bestlamda,newx=x[test,])
+mean((pred-y.test)^2)

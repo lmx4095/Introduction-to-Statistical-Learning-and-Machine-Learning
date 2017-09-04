@@ -1,0 +1,5 @@
+carseats<-read.csv("Carseats_Sale.csv",sep=",",header=T)
+names(carseats)
+y=lm(Sales~.+Income:Advertising,data=Carseats)
+summary(y)
+contrasts(Carseats$ShelveLoc)
